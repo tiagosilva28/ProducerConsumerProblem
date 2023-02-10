@@ -5,8 +5,6 @@ public class Main {
     public static void main(String[] args) {
         Container<Integer> restaurant = new Container<>(10);
 
-        //asdasd
-
         Producer p1 = new Producer("p1",restaurant, 80);
         Thread t1 = new Thread(p1);
         //t1.setName("p1");
