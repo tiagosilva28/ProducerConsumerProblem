@@ -6,6 +6,9 @@ public class Consumer implements Runnable {
     int orderLimit;
     Container queue;
 
+
+    private boolean flag = true;
+
     public Consumer(String name, Container queue, int orderLimit) {
         this.name = name;
         this.orderLimit = orderLimit;
@@ -14,20 +17,26 @@ public class Consumer implements Runnable {
     }
 
     @Override
-    public synchronized void run() {
-        while (queue.plates.size()!=0){
-            if(this.orderLimit == 0)break;
+    public void run() {
+        while (queue.plates.size() ==0) {
             try {
-                Thread.sleep(ThreadLocalRandom.current().nextInt(1000,2000));
+                wait();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            queue.plates.removeLast();
-            this.orderLimit--;
-            System.out.println(queue.plates + " TAKE OFF " + this.name);
         }
 
-        //queue.plates.removeLast();
+        if (this.orderLimit == 0) {
+            return;
+        }
 
+        while (queue.plates.size() > 0) {
+            synchronized (queue.plates) {
+                queue.plates.removeLast();
+                //queue.plates.notifyAll();
+                this.orderLimit--;
+                System.out.println(queue.plates + " took" + this.name);
+            }
+        }
     }
 }

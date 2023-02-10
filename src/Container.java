@@ -8,7 +8,6 @@ public class Container<T> {
     public Container(int limit) {
         this.limit = limit;
         this.plates = new ArrayDeque<>(limit);
-
     }
 
 }
