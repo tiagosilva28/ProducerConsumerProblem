@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -15,11 +16,13 @@ public class Producer implements Runnable {
 
     @Override
     public void run() {
-        while (queue.plates.size() == queue.limit) {
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+        synchronized (queue.plates) {
+            while (queue.plates.size() == queue.limit) {
+                try {
+                    queue.plates.wait();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
 

@@ -18,11 +18,13 @@ public class Consumer implements Runnable {
 
     @Override
     public void run() {
-        while (queue.plates.size() ==0) {
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+        synchronized (queue.plates) {
+            while (queue.plates.size() == 0) {
+                try {
+                    queue.plates.wait();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
 
