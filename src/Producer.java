@@ -16,26 +16,30 @@ public class Producer implements Runnable {
 
     @Override
     public void run() {
-        synchronized (queue.plates) {
-            while (queue.plates.size() == queue.limit) {
-                try {
-                    queue.plates.wait();
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
-
-        if (this.taskLimit == 0) {
+        if (this.taskLimit == queue.limit) {
             return;
         }
 
-        while (queue.plates.size() < queue.limit) {
+        while (taskLimit > 0) {
             synchronized (queue.plates) {
+                while (queue.plates.size() == queue.limit) {
+                    try {
+                        queue.plates.wait();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
+                try {
+                    Thread.sleep(ThreadLocalRandom.current().nextInt(1000,2000));
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+
                 queue.plates.addFirst((int) (Math.random() * (10)) + 1);
                 queue.plates.notifyAll();
                 this.taskLimit--;
-                System.out.println(queue.plates + " " + this.name);
+                System.out.println(queue.plates + " ++++++++++ " + this.name);
             }
         }
     }

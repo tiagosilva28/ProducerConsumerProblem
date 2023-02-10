@@ -18,26 +18,30 @@ public class Consumer implements Runnable {
 
     @Override
     public void run() {
-        synchronized (queue.plates) {
-            while (queue.plates.size() == 0) {
-                try {
-                    queue.plates.wait();
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
-
         if (this.orderLimit == 0) {
             return;
         }
 
-        while (queue.plates.size() > 0) {
+        while (orderLimit > 0) {
             synchronized (queue.plates) {
+                while (queue.plates.size() == 0) {
+                    try {
+                        queue.plates.wait();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
+                try {
+                    Thread.sleep(ThreadLocalRandom.current().nextInt(1000,2000));
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+
                 queue.plates.removeLast();
-                //queue.plates.notifyAll();
+                queue.plates.notifyAll();
                 this.orderLimit--;
-                System.out.println(queue.plates + " took" + this.name);
+                System.out.println(queue.plates + " -------- " + this.name);
             }
         }
     }
