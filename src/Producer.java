@@ -1,6 +1,3 @@
-import java.awt.*;
-import java.util.Queue;
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Producer implements Runnable {
@@ -15,6 +12,22 @@ public class Producer implements Runnable {
     }
 
 
+    private String recipeChoice() {
+        switch ((int) (Math.random() * (5)) + 1) {
+            case 1:
+                return Recipes.FRANCESINHA;
+            case 2:
+                return Recipes.ESPARGUETE;
+            case 3:
+                return Recipes.SOPA;
+            case 4:
+                return Recipes.PIZZA;
+            case 5:
+                return Recipes.ARROZ_DE_TAMBORIL;
+
+        }
+        return "other plate";
+    }
 
     @Override
     public void run() {
@@ -23,11 +36,11 @@ public class Producer implements Runnable {
         }
 
         while (taskLimit > 0) {
-                try {
-                    Thread.sleep(ThreadLocalRandom.current().nextInt(100,1000));
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
+            try {
+                Thread.sleep(ThreadLocalRandom.current().nextInt(100, 1000));
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
             synchronized (queue.plates) {
                 while (queue.plates.size() == queue.limit) {
                     try {
@@ -38,7 +51,7 @@ public class Producer implements Runnable {
                 }
 
 
-                queue.plates.addFirst((int) (Math.random() * (10)) + 1);
+                queue.plates.addFirst(recipeChoice());
                 queue.plates.notifyAll();
                 this.taskLimit--;
                 System.out.println(queue.plates + " ++++++++++ " + this.name);
