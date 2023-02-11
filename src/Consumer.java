@@ -23,6 +23,11 @@ public class Consumer implements Runnable {
         }
 
         while (orderLimit > 0) {
+                try {
+                    Thread.sleep(ThreadLocalRandom.current().nextInt(100,1000));
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             synchronized (queue.plates) {
                 while (queue.plates.size() == 0) {
                     try {
@@ -32,11 +37,6 @@ public class Consumer implements Runnable {
                     }
                 }
 
-                try {
-                    Thread.sleep(ThreadLocalRandom.current().nextInt(1000,2000));
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
 
                 queue.plates.removeLast();
                 queue.plates.notifyAll();

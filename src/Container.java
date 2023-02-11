@@ -10,4 +10,19 @@ public class Container<T> {
         this.plates = new ArrayDeque<>(limit);
     }
 
+    public boolean getStateToProducer(){
+        if(plates.size() < this.limit){
+        return true;
+        }
+        return false;
+    }
+
+    public boolean getStateToConsumer(){
+        if (plates.size() > 0){
+            return true;
+        }
+        return false;
+    }
+
+
 }

@@ -9,7 +9,7 @@ public class Main {
         Thread t1 = new Thread(p1);
         //t1.setName("p1");
 
-        Producer p2 = new Producer("p2",restaurant, 6);
+        Producer p2 = new Producer("p2",restaurant, 15);
         Thread t2 = new Thread(p2);
         //t2.setName("p2");
 
@@ -21,10 +21,12 @@ public class Main {
         Thread t4 = new Thread(c2);
         //t4.setName("c2");
 
-        t3.start();
-        t4.start();
+
 
         t1.start();
         t2.start();
+
+        t3.start();
+        t4.start();
     }
 }

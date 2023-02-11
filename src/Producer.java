@@ -14,6 +14,8 @@ public class Producer implements Runnable {
         this.queue = queue;
     }
 
+
+
     @Override
     public void run() {
         if (this.taskLimit == queue.limit) {
@@ -21,6 +23,11 @@ public class Producer implements Runnable {
         }
 
         while (taskLimit > 0) {
+                try {
+                    Thread.sleep(ThreadLocalRandom.current().nextInt(100,1000));
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             synchronized (queue.plates) {
                 while (queue.plates.size() == queue.limit) {
                     try {
@@ -30,11 +37,6 @@ public class Producer implements Runnable {
                     }
                 }
 
-                try {
-                    Thread.sleep(ThreadLocalRandom.current().nextInt(1000,2000));
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
 
                 queue.plates.addFirst((int) (Math.random() * (10)) + 1);
                 queue.plates.notifyAll();
