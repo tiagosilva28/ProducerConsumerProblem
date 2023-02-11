@@ -1,4 +1,3 @@
-import java.awt.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Consumer implements Runnable {
@@ -23,11 +22,11 @@ public class Consumer implements Runnable {
         }
 
         while (orderLimit > 0) {
-                try {
-                    Thread.sleep(ThreadLocalRandom.current().nextInt(100,1000));
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
+            try {
+                Thread.sleep(ThreadLocalRandom.current().nextInt(100, 1000));
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
             synchronized (queue.plates) {
                 while (queue.plates.size() == 0) {
                     try {
@@ -41,7 +40,7 @@ public class Consumer implements Runnable {
                 queue.plates.removeLast();
                 queue.plates.notifyAll();
                 this.orderLimit--;
-                System.out.println(queue.plates + " -------- " + this.name);
+                System.out.println(queue.plates + " take " + this.name);
             }
         }
     }

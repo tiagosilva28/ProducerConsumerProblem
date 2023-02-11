@@ -54,7 +54,7 @@ public class Producer implements Runnable {
                 queue.plates.addFirst(recipeChoice());
                 queue.plates.notifyAll();
                 this.taskLimit--;
-                System.out.println(queue.plates + " ++++++++++ " + this.name);
+                System.out.println(queue.plates + " add " + this.name);
             }
         }
     }
